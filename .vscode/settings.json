@@ -19,7 +19,7 @@
     "titleBar.inactiveForeground": "#e7e7e799"
   },
   "peacock.color": "#185592",
-  "cSpell.words": ["informations", "Wagehat"],
+  "cSpell.words": ["informations", "schedulr", "Wagehat"],
   "eslint.useFlatConfig": true,
   "eslint.debug": true,
   "eslint.options": {

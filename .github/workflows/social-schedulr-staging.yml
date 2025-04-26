@@ -1,4 +1,4 @@
-name: Wagehat Staging CI
+name: social-schedulr Staging CI
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
           NODE_ENV: staging
 
           # Security
-          CORS_ALLOWED_ORIGINS: http://localhost,http://localhost:9000,http://[::1],http://[::1]:4400,https://stg-core-api.wagehat.com,https://stg-wage-admin.vercel.app
+          CORS_ALLOWED_ORIGINS: http://localhost,http://localhost:9000,http://[::1],http://[::1]:4400,https://stg-core-api.social-schedulr.com,https://stg-wage-admin.vercel.app
           RATE_LIMIT_TTL: 60000
           RATE_LIMIT_MAX: 10000
 
@@ -35,21 +35,21 @@ jobs:
           SMTP_SECURE: false
           SMTP_AUTH_USER: ${{secrets.SMTP_AUTH_USER}}
           SMTP_AUTH_PASS: ${{secrets.SMTP_AUTH_PASS}}
-          SMTP_EMAIL: cr@wagehat.com
+          SMTP_EMAIL: cr@social-schedulr.com
 
           #
           # Infra
           #
-          DOCKER_SERVICE_NAME: wagehat-stg
+          DOCKER_SERVICE_NAME: social-schedulr-stg
 
       - name: Log in to Docker Hub
         run: docker login -u ${{secrets.DOCKER_HUB_USER}} -p ${{secrets.DOCKER_HUB_PASSWORD}}
 
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag ${{secrets.DOCKER_HUB_USER}}/wagehat-stg:latest
+        run: docker build . --file Dockerfile --tag ${{secrets.DOCKER_HUB_USER}}/social-schedulr-stg:latest
 
       - name: Docker Push
-        run: docker push ${{secrets.DOCKER_HUB_USER}}/wagehat-stg:latest
+        run: docker push ${{secrets.DOCKER_HUB_USER}}/social-schedulr-stg:latest
 
       - name: Ensure Docker Compose, Env File Exist
         run: |
@@ -69,7 +69,7 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           source: 'environments,docker-compose.yml'
-          target: '~/deploy/wagehat-stg'
+          target: '~/deploy/social-schedulr-stg'
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
@@ -78,16 +78,16 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd ~/deploy/wagehat-stg
+            cd ~/deploy/social-schedulr-stg
 
             echo "Logging to Docker Hub"
             docker login -u ${{secrets.DOCKER_HUB_USER}} -p ${{secrets.DOCKER_HUB_PASSWORD}}
 
             echo "Stopping previous build"
-            docker stop wagehat-stg || true
+            docker stop social-schedulr-stg || true
 
             echo "Removing previous build"
-            docker rm wagehat-stg || true
+            docker rm social-schedulr-stg || true
 
             echo "Remove previous image"
             docker image prune -a -f
