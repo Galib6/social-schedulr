@@ -1,0 +1,98 @@
+name: Wagehat Staging CI
+
+on:
+  push:
+    branches: [staging]
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate .env
+        run: |
+          envsubst "`printf '${%s} ' $(sh -c "env|cut -d'=' -f1")`" < ./environments/example.env > ./environments/$NODE_ENV.env
+          envsubst < docker-compose.template.yml > docker-compose.yml
+        env:
+          PORT: 4400
+          APP_ENV: staging
+          NODE_ENV: staging
+
+          # Security
+          CORS_ALLOWED_ORIGINS: http://localhost,http://localhost:9000,http://[::1],http://[::1]:4400,https://stg-core-api.wagehat.com,https://stg-wage-admin.vercel.app
+          RATE_LIMIT_TTL: 60000
+          RATE_LIMIT_MAX: 10000
+
+          #
+          # SMTP
+          #
+
+          SMTP_HOST: ${{secrets.SMTP_HOST}}
+          SMTP_PORT: 587
+          SMTP_SECURE: false
+          SMTP_AUTH_USER: ${{secrets.SMTP_AUTH_USER}}
+          SMTP_AUTH_PASS: ${{secrets.SMTP_AUTH_PASS}}
+          SMTP_EMAIL: cr@wagehat.com
+
+          #
+          # Infra
+          #
+          DOCKER_SERVICE_NAME: wagehat-stg
+
+      - name: Log in to Docker Hub
+        run: docker login -u ${{secrets.DOCKER_HUB_USER}} -p ${{secrets.DOCKER_HUB_PASSWORD}}
+
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag ${{secrets.DOCKER_HUB_USER}}/wagehat-stg:latest
+
+      - name: Docker Push
+        run: docker push ${{secrets.DOCKER_HUB_USER}}/wagehat-stg:latest
+
+      - name: Ensure Docker Compose, Env File Exist
+        run: |
+          if [ ! -f environments/staging.env ]; then
+            echo "File environments/staging.env does not exist."
+            exit 1
+          fi
+          if [ ! -f docker-compose.yml ]; then
+            echo "File docker-compose.yml does not exist."
+            exit 1
+          fi
+
+      - name: Transfer Docker Compose, Env File
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: 'environments,docker-compose.yml'
+          target: '~/deploy/wagehat-stg'
+
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/deploy/wagehat-stg
+
+            echo "Logging to Docker Hub"
+            docker login -u ${{secrets.DOCKER_HUB_USER}} -p ${{secrets.DOCKER_HUB_PASSWORD}}
+
+            echo "Stopping previous build"
+            docker stop wagehat-stg || true
+
+            echo "Removing previous build"
+            docker rm wagehat-stg || true
+
+            echo "Remove previous image"
+            docker image prune -a -f
+
+            echo "Starting latest build"
+            docker compose --env-file environments/staging.env -f docker-compose.yml up -d
+
+            echo "Deploy Done"

@@ -1,0 +1,66 @@
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Auth } from '@src/app/decorators';
+import { AuthType } from '@src/app/enums/auth-type.enum';
+import { FilterRoleDTO } from '@src/app/modules/acl/dtos';
+import { Role } from '@src/app/modules/acl/entities/role.entity';
+import { SuccessResponse } from '@src/app/types';
+import { FindOptionsRelations } from 'typeorm';
+import { CreateUserDTO, FilterUserDTO, UpdateUserDTO } from '../../dtos';
+import { User } from '../../entities/user.entity';
+import { UserService } from '../../services/user.service';
+
+@ApiTags('User')
+@Auth(AuthType.None)
+@ApiBearerAuth()
+@Controller('internal/users')
+export class InternalUserController {
+  // RELATIONS = ['userRoles', 'userRoles.role'];
+  constructor(private readonly service: UserService) {}
+
+  RELATIONS: FindOptionsRelations<User> = {
+    userRoles: {
+      role: true,
+    },
+  };
+
+  @Get()
+  async findAll(@Query() query: FilterUserDTO): Promise<SuccessResponse<User[]>> {
+    return this.service.findAllBase(query, { relations: this.RELATIONS });
+  }
+
+  @Get(':id/available-roles')
+  async availableRoles(@Param('id') id: string, @Query() query: FilterRoleDTO): Promise<Role[]> {
+    return this.service.availableRoles(id, query);
+  }
+
+  @Get(':id')
+  async findById(@Param('id') id: string): Promise<User> {
+    return this.service.findByIdBase(id, { relations: this.RELATIONS });
+  }
+
+  @Post()
+  async createOne(@Body() body: CreateUserDTO): Promise<User> {
+    return this.service.createUser(body, this.RELATIONS);
+  }
+
+  //   @Post('recover/:id')
+  //   async recoverById(@Param('id') id: string): Promise<User> {
+  //     return this.service.recoverByIdBase(id);
+  //   }
+
+  @Patch(':id')
+  async updateOne(@Param('id') id: string, @Body() body: UpdateUserDTO): Promise<User> {
+    return this.service.updateUser(id, body, this.RELATIONS);
+  }
+
+  @Delete(':id')
+  async deleteOne(@Param('id') id: string | string): Promise<SuccessResponse> {
+    return this.service.deleteOneBase(id as any);
+  }
+
+  //   @Delete('soft/:id')
+  //   async softDeleteOne(@Param('id') id: string): Promise<SuccessResponse> {
+  //     return this.service.softDeleteOneBase(id);
+  //   }
+}
