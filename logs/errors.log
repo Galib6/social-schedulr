@@ -1,0 +1,54 @@
+[31m[NestWinston][39m [31m6751[39m 5/11/2025, 3:55:16 AM [31m  ERROR[39m [33m[TypeOrmModule][39m [31mUnable to connect to the database. Retrying (1)...[39m - {
+  stack: [
+    [32m'Error: connect ECONNREFUSED 127.0.0.1:5432\n'[39m +
+      [32m'    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16)'[39m
+  ]
+}
+[31m[NestWinston][39m [31m6751[39m 5/11/2025, 3:55:19 AM [31m  ERROR[39m [33m[TypeOrmModule][39m [31mUnable to connect to the database. Retrying (2)...[39m - {
+  stack: [
+    [32m'Error: connect ECONNREFUSED 127.0.0.1:5432\n'[39m +
+      [32m'    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16)'[39m
+  ]
+}
+[31m[NestWinston][39m [31m6751[39m 5/11/2025, 3:55:22 AM [31m  ERROR[39m [33m[TypeOrmModule][39m [31mUnable to connect to the database. Retrying (3)...[39m - {
+  stack: [
+    [32m'Error: connect ECONNREFUSED 127.0.0.1:5432\n'[39m +
+      [32m'    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16)'[39m
+  ]
+}
+[31m[NestWinston][39m [31m6751[39m 5/11/2025, 3:55:25 AM [31m  ERROR[39m [33m[TypeOrmModule][39m [31mUnable to connect to the database. Retrying (4)...[39m - {
+  stack: [
+    [32m'Error: connect ECONNREFUSED 127.0.0.1:5432\n'[39m +
+      [32m'    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16)'[39m
+  ]
+}
+[31m[NestWinston][39m [31m6751[39m 5/11/2025, 3:55:28 AM [31m  ERROR[39m [33m[TypeOrmModule][39m [31mUnable to connect to the database. Retrying (5)...[39m - {
+  stack: [
+    [32m'Error: connect ECONNREFUSED 127.0.0.1:5432\n'[39m +
+      [32m'    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16)'[39m
+  ]
+}
+[31m[NestWinston][39m [31m6751[39m 5/11/2025, 3:55:31 AM [31m  ERROR[39m [33m[TypeOrmModule][39m [31mUnable to connect to the database. Retrying (6)...[39m - {
+  stack: [
+    [32m'Error: connect ECONNREFUSED 127.0.0.1:5432\n'[39m +
+      [32m'    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16)'[39m
+  ]
+}
+[31m[NestWinston][39m [31m6751[39m 5/11/2025, 3:55:34 AM [31m  ERROR[39m [33m[TypeOrmModule][39m [31mUnable to connect to the database. Retrying (7)...[39m - {
+  stack: [
+    [32m'Error: connect ECONNREFUSED 127.0.0.1:5432\n'[39m +
+      [32m'    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16)'[39m
+  ]
+}
+[31m[NestWinston][39m [31m6751[39m 5/11/2025, 3:55:37 AM [31m  ERROR[39m [33m[TypeOrmModule][39m [31mUnable to connect to the database. Retrying (8)...[39m - {
+  stack: [
+    [32m'Error: connect ECONNREFUSED 127.0.0.1:5432\n'[39m +
+      [32m'    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16)'[39m
+  ]
+}
+[31m[NestWinston][39m [31m6751[39m 5/11/2025, 3:55:40 AM [31m  ERROR[39m [33m[TypeOrmModule][39m [31mUnable to connect to the database. Retrying (9)...[39m - {
+  stack: [
+    [32m'Error: connect ECONNREFUSED 127.0.0.1:5432\n'[39m +
+      [32m'    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1634:16)'[39m
+  ]
+}
